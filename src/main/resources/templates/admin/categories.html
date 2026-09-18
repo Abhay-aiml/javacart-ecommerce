@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Manage Categories — JavaCart Admin</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="container">
+  <h1 class="page-title">Categories</h1>
+  <div th:replace="~{admin/admin-fragments :: tabs(active='categories')}"></div>
+
+  <div class="form-card" style="max-width:420px;margin:0 0 26px;">
+    <form th:action="@{/admin/categories/save}" method="post" style="display:flex;gap:10px;">
+      <input type="text" name="name" placeholder="New category name" required="required" style="flex:1;"/>
+      <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+  </div>
+
+  <table class="data-table" style="max-width:500px;">
+    <thead><tr><th>Name</th><th></th></tr></thead>
+    <tbody>
+      <tr th:each="c : ${categories}">
+        <td th:text="${c.name}">Name</td>
+        <td>
+          <form th:action="@{/admin/categories/{id}/delete(id=${c.id})}" method="post"
+                onsubmit="return confirm('Delete this category? Products in it will become uncategorized.');">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

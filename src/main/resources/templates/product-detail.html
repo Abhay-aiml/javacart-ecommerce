@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/>
+  <title th:text="${product.name} + ' — JavaCart'">Product — JavaCart</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="container">
+  <div class="product-detail">
+    <div class="detail-image">
+      <img th:if="${product.imageUrl != null and !product.imageUrl.isEmpty()}" th:src="${product.imageUrl}" alt="product image"/>
+      <span th:unless="${product.imageUrl != null and !product.imageUrl.isEmpty()}">No image available</span>
+    </div>
+
+    <div>
+      <div class="product-category" th:if="${product.category != null}" th:text="${product.category.name}">Category</div>
+      <h1 th:text="${product.name}">Product name</h1>
+      <p th:text="${product.description}">Description</p>
+      <p class="product-price" th:text="'₹' + ${#numbers.formatDecimal(product.price, 1, 2)}">₹0.00</p>
+
+      <p class="stock-note in" th:if="${product.inStock}" th:text="${product.stockQuantity} + ' in stock'">In stock</p>
+      <p class="stock-note out" th:unless="${product.inStock}">Out of stock</p>
+
+      <div sec:authorize="isAuthenticated()">
+        <form th:if="${product.inStock}" th:action="@{/cart/add}" method="post" style="display:flex; gap:10px; align-items:center; margin-top:16px;">
+          <input type="hidden" name="productId" th:value="${product.id}"/>
+          <input class="qty-input" type="number" name="quantity" value="1" min="1" th:max="${product.stockQuantity}"/>
+          <button type="submit" class="btn btn-primary">Add to Cart</button>
+        </form>
+      </div>
+      <div sec:authorize="!isAuthenticated()" style="margin-top:16px;">
+        <a class="btn btn-outline" href="/login">Log in to purchase</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

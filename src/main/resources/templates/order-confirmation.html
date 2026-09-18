@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Order Confirmed — JavaCart</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="container">
+  <div class="empty-state" style="background:#fff;border:1px solid #e3e0d6;border-radius:10px;">
+    <h1 style="color:#2e7d4f;">Order placed successfully!</h1>
+    <p>Order #<span th:text="${order.id}">0</span> — Total: ₹<span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 2)}">0.00</span></p>
+    <p>Shipping to: <span th:text="${order.shippingAddress}">address</span></p>
+    <a href="/orders" class="btn btn-primary" style="margin-top:16px;display:inline-block;">View My Orders</a>
+    <a href="/" class="btn btn-outline" style="margin-top:16px;display:inline-block;margin-left:10px;">Continue Shopping</a>
+  </div>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

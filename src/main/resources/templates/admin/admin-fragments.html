@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="admin-tabs" th:fragment="tabs(active)">
+  <a href="/admin" th:classappend="${active == 'dashboard'} ? 'active' : ''">Dashboard</a>
+  <a href="/admin/products" th:classappend="${active == 'products'} ? 'active' : ''">Products</a>
+  <a href="/admin/categories" th:classappend="${active == 'categories'} ? 'active' : ''">Categories</a>
+  <a href="/admin/orders" th:classappend="${active == 'orders'} ? 'active' : ''">Orders</a>
+</div>
+</body>
+</html>

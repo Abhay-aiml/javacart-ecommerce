@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<header class="site-header" th:fragment="header">
+  <div class="container header-inner">
+    <a class="brand" href="/">Java<span>Cart</span></a>
+
+    <form class="search-form" action="/search" method="get">
+      <input type="text" name="q" placeholder="Search products..." required="required"/>
+      <button type="submit">Search</button>
+    </form>
+
+    <nav class="main-nav">
+      <a href="/">Home</a>
+
+      <a href="/orders" sec:authorize="isAuthenticated()">My Orders</a>
+      <a href="/admin" sec:authorize="hasRole('ADMIN')">Admin</a>
+
+      <a href="/cart" sec:authorize="isAuthenticated()">
+        Cart <span class="cart-badge" th:if="${cartCount != null and cartCount > 0}" th:text="${cartCount}">0</span>
+      </a>
+
+      <span sec:authorize="isAuthenticated()" style="opacity:.85;font-size:.85rem;">
+        Hi, <span sec:authentication="name">user</span>
+      </span>
+
+      <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" style="display:inline;">
+        <button type="submit" class="linklike">Logout</button>
+      </form>
+
+      <a href="/login" sec:authorize="!isAuthenticated()">Login</a>
+      <a href="/register" sec:authorize="!isAuthenticated()">Register</a>
+    </nav>
+  </div>
+</header>
+
+<div class="category-bar" th:fragment="categoryBar">
+  <div class="container">
+    <a href="/" th:classappend="${selectedCategoryId == null} ? 'active' : ''">All</a>
+    <a th:each="cat : ${categories}"
+       th:href="@{/(categoryId=${cat.id})}"
+       th:text="${cat.name}"
+       th:classappend="${selectedCategoryId != null and selectedCategoryId == cat.id} ? 'active' : ''">Category</a>
+  </div>
+</div>
+
+<footer class="site-footer" th:fragment="footer">
+  <div class="container">
+    &copy; 2026 JavaCart &mdash; a demo e-commerce site built with Spring Boot.
+  </div>
+</footer>
+
+</body>
+</html>

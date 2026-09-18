@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Your Cart — JavaCart</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="container">
+  <h1 class="page-title">Your Cart</h1>
+
+  <div class="empty-state" th:if="${cartItems.isEmpty()}">
+    Your cart is empty. <a href="/" class="btn btn-primary" style="margin-top:14px;display:inline-block;">Browse products</a>
+  </div>
+
+  <div th:unless="${cartItems.isEmpty()}">
+    <table class="data-table">
+      <thead>
+        <tr><th>Product</th><th>Price</th><th>Quantity</th><th>Subtotal</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="item : ${cartItems}">
+          <td><a th:href="@{/products/{id}(id=${item.product.id})}" th:text="${item.product.name}">Name</a></td>
+          <td th:text="'₹' + ${#numbers.formatDecimal(item.product.price, 1, 2)}">₹0.00</td>
+          <td>
+            <form th:action="@{/cart/update}" method="post" style="display:flex;gap:6px;">
+              <input type="hidden" name="cartItemId" th:value="${item.id}"/>
+              <input class="qty-input" type="number" name="quantity" th:value="${item.quantity}" min="1" th:max="${item.product.stockQuantity}"/>
+              <button type="submit" class="btn btn-outline btn-sm">Update</button>
+            </form>
+          </td>
+          <td th:text="'₹' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">₹0.00</td>
+          <td>
+            <form th:action="@{/cart/remove}" method="post">
+              <input type="hidden" name="cartItemId" th:value="${item.id}"/>
+              <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="cart-summary">
+      <div class="cart-total">Total: ₹<span th:text="${#numbers.formatDecimal(cartTotal, 1, 2)}">0.00</span></div>
+      <a href="/checkout" class="btn btn-accent">Proceed to Checkout</a>
+    </div>
+  </div>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Search results — JavaCart</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments :: header}"></div>
+<div th:replace="~{fragments :: categoryBar}"></div>
+
+<main class="container">
+  <h1 class="page-title">Results for "<span th:text="${query}">query</span>"</h1>
+
+  <div class="empty-state" th:if="${products.isEmpty()}">
+    No products matched your search.
+  </div>
+
+  <div class="product-grid" th:unless="${products.isEmpty()}">
+    <a class="product-card" th:each="p : ${products}" th:href="@{/products/{id}(id=${p.id})}">
+      <div class="product-thumb">
+        <img th:if="${p.imageUrl != null and !p.imageUrl.isEmpty()}" th:src="${p.imageUrl}" alt="product image"/>
+        <span th:unless="${p.imageUrl != null and !p.imageUrl.isEmpty()}" th:text="${p.name}">No image</span>
+      </div>
+      <div class="product-info">
+        <div class="product-category" th:if="${p.category != null}" th:text="${p.category.name}">Category</div>
+        <div class="product-name" th:text="${p.name}">Product name</div>
+        <div class="product-price" th:text="'₹' + ${#numbers.formatDecimal(p.price, 1, 2)}">₹0.00</div>
+      </div>
+    </a>
+  </div>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>My Orders — JavaCart</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="container">
+  <h1 class="page-title">My Orders</h1>
+
+  <div class="empty-state" th:if="${orders.isEmpty()}">
+    You haven't placed any orders yet. <a href="/">Start shopping</a>
+  </div>
+
+  <table class="data-table" th:unless="${orders.isEmpty()}">
+    <thead><tr><th>Order #</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr th:each="order : ${orders}">
+        <td th:text="${order.id}">1</td>
+        <td th:text="${#temporals.format(order.placedAt, 'dd MMM yyyy, HH:mm')}">date</td>
+        <td th:text="${order.items.size()} + ' item(s)'">items</td>
+        <td th:text="'₹' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">₹0.00</td>
+        <td><span class="badge" th:classappend="'badge-' + ${order.status.name().toLowerCase()}" th:text="${order.status}">STATUS</span></td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

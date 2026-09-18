@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title th:text="${product.id != null ? 'Edit Product' : 'Add Product'} + ' — JavaCart Admin'">Product Form</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="container">
+  <h1 class="page-title" th:text="${product.id != null ? 'Edit Product' : 'Add Product'}">Add Product</h1>
+  <div th:replace="~{admin/admin-fragments :: tabs(active='products')}"></div>
+
+  <div class="form-card" style="max-width:560px;">
+    <form th:action="@{/admin/products/save}" method="post">
+      <input type="hidden" name="id" th:value="${product.id}"/>
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" th:value="${product.name}" required="required"/>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" th:text="${product.description}"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price (₹)</label>
+        <input type="number" id="price" name="price" step="0.01" min="0" th:value="${product.price}" required="required"/>
+      </div>
+
+      <div class="form-group">
+        <label for="stockQuantity">Stock Quantity</label>
+        <input type="number" id="stockQuantity" name="stockQuantity" min="0" th:value="${product.stockQuantity}" required="required"/>
+      </div>
+
+      <div class="form-group">
+        <label for="imageUrl">Image URL (optional)</label>
+        <input type="text" id="imageUrl" name="imageUrl" th:value="${product.imageUrl}" placeholder="https://..."/>
+      </div>
+
+      <div class="form-group">
+        <label for="categoryId">Category</label>
+        <select id="categoryId" name="categoryId">
+          <option value="">— None —</option>
+          <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"
+                  th:selected="${product.category != null and product.category.id == c.id}">Category</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="active" value="true" th:checked="${product.id == null or product.active}" style="width:auto;display:inline;"/>
+          Active (visible in store)
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Save Product</button>
+    </form>
+  </div>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

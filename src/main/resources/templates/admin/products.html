@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Manage Products — JavaCart Admin</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="container">
+  <h1 class="page-title">Products</h1>
+  <div th:replace="~{admin/admin-fragments :: tabs(active='products')}"></div>
+
+  <a href="/admin/products/new" class="btn btn-primary" style="margin-bottom:18px;display:inline-block;">+ Add Product</a>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Active</th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr th:each="p : ${products}">
+        <td th:text="${p.name}">Name</td>
+        <td th:text="${p.category != null ? p.category.name : '—'}">Category</td>
+        <td th:text="'₹' + ${#numbers.formatDecimal(p.price, 1, 2)}">₹0.00</td>
+        <td th:text="${p.stockQuantity}">0</td>
+        <td th:text="${p.active} ? 'Yes' : 'No'">Yes</td>
+        <td style="display:flex;gap:8px;">
+          <a th:href="@{/admin/products/{id}/edit(id=${p.id})}" class="btn btn-outline btn-sm">Edit</a>
+          <form th:action="@{/admin/products/{id}/delete(id=${p.id})}" method="post"
+                onsubmit="return confirm('Delete this product?');">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>
